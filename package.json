@@ -25,5 +25,9 @@
   },
   "bin": {
     "ng-swagger-gen": "./ng-swagger-gen"
+  },
+  "devDependencies": {
+    "@types/mustache": "^0.8.31",
+    "@types/node": "^10.9.4"
   }
 }

@@ -9,10 +9,13 @@ const http = require('http');
 const https = require('https');
 const path = require('path');
 const Mustache = require('mustache');
+
+/** @type {any} */
 const $RefParser = require('json-schema-ref-parser');
 
 /**
  * Main generate function
+ * @param options {{swagger: string}}
  */
 function ngSwaggerGen(options) {
   if (typeof options.swagger != 'string') {
@@ -314,6 +317,8 @@ function collectDependencies(dependencies, model, models) {
 /**
  * Creates all sub-directories for a nested path
  * Thanks to https://github.com/grj1046/node-mkdirs/blob/master/index.js
+ * @param folderPath {String}
+ * @param mode {string | number =}
  */
 function mkdirs(folderPath, mode) {
   var folders = [];
@@ -332,6 +337,7 @@ function mkdirs(folderPath, mode) {
 
 /**
  * Removes the given file if it exists (logging the action)
+ * @param file {String}
  */
 function rmIfExists(file) {
   if (fs.existsSync(file)) {
@@ -342,6 +348,7 @@ function rmIfExists(file) {
 
 /**
  * Converts a given type name into a TS file name
+ * @param typeName {String}
  */
 function toFileName(typeName) {
   var result = '';
@@ -360,6 +367,7 @@ function toFileName(typeName) {
 
 /**
  * Converts a given name into a valid class name
+ * @param name {String}
  */
 function toClassName(name) {
   var result = '';
@@ -386,7 +394,7 @@ function toClassName(name) {
 
 /**
  * Сonverts a given type name into a file name of the example file
- * @param typeName
+ * @param typeName {String}
  */
 function toExampleFileName(typeName) {
   return toFileName(typeName) + '.example';
@@ -394,6 +402,7 @@ function toExampleFileName(typeName) {
 
 /**
  * Resolves the simple reference name from a qualified reference
+ * @param ref {String}
  */
 function simpleRef(ref) {
   if (!ref) {
@@ -407,7 +416,8 @@ function simpleRef(ref) {
 }
 
 /**
- * Converts a given enum value into the enum name
+ * Converts a given enum value into the enum name¨
+ * @param value {String}
  */
 function toEnumName(value) {
   var result = '';
@@ -421,7 +431,7 @@ function toEnumName(value) {
     result += c.toUpperCase();
     wasLower = isLower;
   }
-  if (!isNaN(value[0])) {
+  if (!isNaN(Number(value[0]))) {
     result = '_' + result;
   }
   result = result.replace(/[^\w]/g, '_');
@@ -430,11 +440,13 @@ function toEnumName(value) {
 
 /**
  * Returns a multi-line comment for the given text
+ * @param text {String}
+ * @param level {number=}
  */
 function toComments(text, level) {
   var indent = '';
   var i;
-  for (i = 0; i < level; i++) {
+  for (i = 0; i < (level||0); i++) {
     indent += '  ';
   }
   if (text == null || text.length === 0) {
@@ -451,15 +463,20 @@ function toComments(text, level) {
 
 /**
  * Class used to resolve the model dependencies
+ * @param models {any}
+ * @param ownType {String=}
  */
 function DependenciesResolver(models, ownType) {
   this.models = models;
   this.ownType = ownType;
+
+  /** @type {String[]} */
   this.dependencies = [];
   this.dependencyNames = [];
 }
 /**
  * Adds a candidate dependency
+ * @param dep {String}
  */
 DependenciesResolver.prototype.add = function(dep) {
   dep = removeBrackets(dep);
@@ -635,6 +652,7 @@ function processModels(swagger, options) {
  * Removes an array designation from the given type.
  * For example, "Array<a>" returns "a", "a[]" returns "a", while "b" returns "b".
  * A special case is for inline objects. In this case, the result is "object".
+ * @param type {String}
  */
 function removeBrackets(type) {
   if (typeof type == 'object') {
