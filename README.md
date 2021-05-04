@@ -7,8 +7,19 @@ clients from a [Swagger 2.0](http://swagger.io/)
 The generated classes follow the principles of
 [Angular](https://angular.io/).
 
+
+**NOTICE**: This project isn't actively maintained anymore.
+Since 2019 our development focus has shifted to [ng-openapi-gen](https://github.com/cyclosproject/ng-openapi-gen),
+and the Cyclos project, which maintains both projects has long ago moved to OpenAPI 3.
+As such, the maintainance of `ng-swagger-gen` is basically done by the community, via pull requests.
+However, as `ng-swagger-gen` has no automated tests, accepting PR's for new features is also challenging,
+because the original maintainers have no practical way to test if anything else is broken.
+As such, only important bug fixes will be accepted.
+
+
 Angular / RxJS version compatibility:
 
+- Starting with version `2.0.0`, Angular 7+ is required.
 - Starting with version `1.0.0`, Angular 6+ is required.
 - Version `0.11.x` supports Angular 4.3+ (with rxjs 5.5) and Angular 5.
 
@@ -245,6 +256,10 @@ The supported properties in the JSON file are:
   function called `get<Model>Example()`, which will return the data present in
   the example section.
 - `camelCase`: Generates service methods in camelCase instead of PascalCase.
+- `customFileSuffix`: Set custom suffixes for generated files.
+- `timeout`: Set the amount of time (in milliseconds) to wait for a response
+from the server when downloading files. Default to 20 seconds.
+- `skipProxySetup`: Skip the proxy setup when unable to generate from localhost.
 
 ### Configuration file example
 The following is an example of a configuration file which will choose a few
@@ -445,7 +460,9 @@ equivalents) to use an array of models.
 ## Who uses this project
 This project was developed by the [Cyclos](http://cyclos.org) development team,
 and, in fact, the [Cyclos REST API](https://demo.cyclos.org/api) is the primary
-test case for generated classes.
+test case for generated classes. However, since Cyclos 4.12, the project has 
+changed the API descriptor to OpenAPI 3. As such, a new generator was developed:
+[ng-openapi-gen](https://github.com/cyclosproject/ng-openapi-gen).
 
 That doesn't mean that the generator works only for the Cyclos API. For
 instance, the following commands will generate an API client for
